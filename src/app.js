@@ -1,11 +1,10 @@
 const express = require("express");
-require("dotenv").config();
+const { PORT } = require("./config/environment");
 const loggerMiddlewares = require("./middlewares/logger");
 const errorHandler = require("./middlewares/error");
 
 // Importar rutas
 const indexRoutes = require("./routes/index");
-const authRoutes = require("./routes/auth");
 
 const app = express();
 
@@ -16,7 +15,6 @@ app.use(loggerMiddlewares);
 
 // Rutas
 app.use("/", indexRoutes);
-app.use("/", authRoutes);
 
 // Middleware de manejo de errores
 app.use(errorHandler);

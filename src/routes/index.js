@@ -21,4 +21,14 @@ router.post("/api/data", GeneralController.handleJsonData);
 //errores endpoint
 router.get("/error", GeneralController.triggerError);
 
+// Importar rutas versionadas
+const authRoutes = require("./v1/auth");
+const appointmentRoutes = require("./v1/appointment");
+const adminRoutes = require("./v1/admin");
+
+// Rutas versionadas
+router.use("/auth", authRoutes);
+router.use("/appointments", appointmentRoutes);
+router.use("/admin", adminRoutes);
+
 module.exports = router;

@@ -1,11 +1,22 @@
 const AuthService = require("../services/authService");
+const { body, validationResult } = require('express-validator');
 
 class AuthController {
+  static validateRegister = [
+    body('name').isLength({ min: 2 }).withMessage('El nombre debe tener al menos 2 caracteres'),
+    body('email').isEmail().withMessage('Debe proporcionar un email válido'),
+    body('password').isLength({ min: 6 }).withMessage('La contraseña debe tener al menos 6 caracteres'),
+  ];
+
+  static validateLogin = [
+    body('email').isEmail().withMessage('Debe proporcionar un email válido'),
+    body('password').notEmpty().withMessage('La contraseña es requerida'),
+  ];
+
   static async register(req, res) {
-    if (!req.body || !req.body.name || !req.body.email || !req.body.password) {
-      return res.status(400).json({
-        error: "Debe proporcionar name, email y password válidos",
-      });
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
     }
 
     const { name, email, password } = req.body;
@@ -24,10 +35,9 @@ class AuthController {
   }
 
   static async login(req, res) {
-    if (!req.body || !req.body.email || !req.body.password) {
-      return res.status(400).json({
-        error: "Debe proporcionar email y password válidos",
-      });
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
     }
 
     const { email, password } = req.body;
